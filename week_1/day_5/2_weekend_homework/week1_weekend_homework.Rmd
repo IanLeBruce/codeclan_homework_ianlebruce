@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+books <- read.csv("books.csv") # load in the data and assign to "books"
+
+glimpse(books)
+names(books) # get a feel for the data, note - not sure why it's not showing the first 3 names of rowid, bookid and title
+
+# check dataset for any missing data
+
+books %>% 
+  summarise(across(.cols = everything(), .fns = ~sum(is.na(.x))))
+
+# practising pull function to estimate what the rating is out of - data shows first 1,000 entries and appears to be a score out of 5
+
+books %>% 
+  pull(average_rating) 
+
+# find the mean average rating - 3.934075
+
+mean_average_rating <- books %>% 
+  summarise(mean_average_rating = mean(average_rating)) %>% 
+  pull(mean_average_rating)
+
+# create a table showing only the books with a rating higher than the average with columns title, authors and language code
+
+books %>% 
+  filter(average_rating > mean_average_rating) 
+
+books_tidy <- books %>% 
+  select("title", "authors", "average_rating", "language_code") %>% 
+  filter(average_rating > mean_average_rating) 
+  
+books_tidy
+
+books %>% 
+  select(average_rating, title) %>%
+  group_by(title) %>% 
+  arrange(average_rating)
+
+
+
+```
+
