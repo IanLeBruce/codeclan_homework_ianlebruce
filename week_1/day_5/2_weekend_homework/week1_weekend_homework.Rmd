@@ -14,7 +14,7 @@ glimpse(books) #11,123 rows and 13 columns
 
 names(books) # get a feel for the data, note - not sure why it's not showing the first 3 names of rowid, bookid and title - closing and opening RSTudio solved this issue?
 
-# check dataset for any missing data
+# check dataset for any missing data - there isn't
 
 books %>% 
   summarise(across(.cols = everything(), .fns = ~sum(is.na(.x))))
@@ -24,13 +24,15 @@ books %>%
 books %>% 
   pull(average_rating) 
 
-# find the mean average rating - 3.934075
+# find the mean average rating 
 
 mean_average_rating <- books %>% 
   summarise(mean_average_rating = mean(average_rating)) %>% 
   pull(mean_average_rating)
 
-# create a table showing only the books with a rating higher than the average with columns title, authors and language code
+mean_average_rating # 3.934075
+
+# task - create a table showing only the books with a rating higher than the average with columns title, authors and language code
 
 books %>% 
   filter(average_rating > mean_average_rating) 
@@ -39,12 +41,51 @@ books_tidy <- books %>%
   select("title", "authors", "average_rating", "language_code") %>% 
   filter(average_rating > mean_average_rating) 
   
-books_tidy
+books_tidy # this is working, some columns are very wide though and looks ugly
+
+head(books_tidy, 10) # show the first 10 rows of the tidy subset
+
+View(books_tidy) # Much more readable like this
+
+# task - sort the rows in order of rating with the best at the top
+
+books %>% 
+  
+
+
+# task - make a histogram and a boxplot of the average ratings
+
+books %>% 
+  hist(average_rating)
+
 
 books %>% 
   select(average_rating, title) %>%
   group_by(title) %>% 
   arrange(average_rating)
+
+
+# task - make a barplot showing which languages are most frequent in the dataset
+
+# first get that info in a table:
+
+books %>% 
+ select(language_code) %>% 
+  count(language_code) %>% 
+  arrange(desc(n)) 
+
+# eng = 8908, en-US = 1408, spa = 218, en-GB = 214, fre = 144 etc
+
+
+
+
+
+
+
+# task - add en-US and en-GB to the eng data
+
+
+
 
 
 
