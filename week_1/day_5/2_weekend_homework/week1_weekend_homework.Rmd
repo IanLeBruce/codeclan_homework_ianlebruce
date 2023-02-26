@@ -10,8 +10,9 @@ library(tidyverse)
 ```{r}
 books <- read.csv("books.csv") # load in the data and assign to "books"
 
-glimpse(books)
-names(books) # get a feel for the data, note - not sure why it's not showing the first 3 names of rowid, bookid and title
+glimpse(books) #11,123 rows and 13 columns
+
+names(books) # get a feel for the data, note - not sure why it's not showing the first 3 names of rowid, bookid and title - closing and opening RSTudio solved this issue?
 
 # check dataset for any missing data
 
