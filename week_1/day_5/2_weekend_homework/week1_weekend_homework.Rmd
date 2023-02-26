@@ -14,6 +14,10 @@ glimpse(books) #11,123 rows and 13 columns
 
 names(books) # get a feel for the data, note - not sure why it's not showing the first 3 names of rowid, bookid and title - closing and opening RSTudio solved this issue?
 
+head(books)
+
+tail(books)
+
 # check dataset for any missing data - there isn't
 
 books %>% 
@@ -23,6 +27,9 @@ books %>%
 
 books %>% 
   pull(average_rating) 
+
+### books %>% 
+###  unique(average_rating) # I wanted to check that it is a score out of 5, this shows the unique values - Error: argument 'incomparables != FALSE' is not used (yet)
 
 # find the mean average rating 
 
@@ -45,24 +52,32 @@ books_tidy # this is working, some columns are very wide though and looks ugly
 
 head(books_tidy, 10) # show the first 10 rows of the tidy subset
 
-View(books_tidy) # Much more readable like this
+View(head(books_tidy, 10)) # Much more readable like this
+
 
 # task - sort the rows in order of rating with the best at the top
 
+class(average_rating) # numeric as expected - note that data is a dbl which is part of the numeric set
+
 books %>% 
+  select(average_rating, title) %>%
+  arrange(desc(average_rating))
   
 
+# do head and tail to see at a glance the top and bottom values 
 
-# task - make a histogram and a boxplot of the average ratings
+
+
+books %>% 
+  head(arrange(desc(average_rating)))
+
+
+
+# task - make a histogram and a boxplot of average_ratings
 
 books %>% 
   hist(average_rating)
 
-
-books %>% 
-  select(average_rating, title) %>%
-  group_by(title) %>% 
-  arrange(average_rating)
 
 
 # task - make a barplot showing which languages are most frequent in the dataset
@@ -76,10 +91,8 @@ books %>%
 
 # eng = 8908, en-US = 1408, spa = 218, en-GB = 214, fre = 144 etc
 
-
-
-
-
+books %>% 
+  barplot(c(language_code))
 
 
 # task - add en-US and en-GB to the eng data
