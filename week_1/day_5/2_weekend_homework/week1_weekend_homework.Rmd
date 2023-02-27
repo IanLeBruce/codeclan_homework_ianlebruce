@@ -91,16 +91,105 @@ books %>%
 
 # eng = 8908, en-US = 1408, spa = 218, en-GB = 214, fre = 144 etc
 
+# task - add en-US and en-GB to the eng data
+
+books2 <- books %>%
+  mutate(language_code_group = if_else(
+    language_code %in% c("eng", "en-US", "en-GB", "en-CA"),
+    "eng",
+    language_code)
+  )
+
+
 books %>% 
   barplot(c(language_code))
 
 
-# task - add en-US and en-GB to the eng data
+```
 
 
 
 
+```{r}
+
+books %>%
+  arrange(desc(ratings_count)) %>% 
+  select(title, ratings_count, average_rating) %>% 
+  head(20) %>% 
+  ggplot() + 
+  aes(x = title, y = average_rating) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top 20 Most Rated Books",
+       x = "",
+       y = "Ratings Count") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        axis.text.y = element_text(angle = 0))
 
 
 ```
+
+
+```{r}
+install.packages(lubridate) # error - not found
+library(lubridate)
+
+books_data <- read_csv("data/books.csv")
+d_adams <- filter(books_data, authors == "Douglas Adams")
+d_adams
+
+d_adams <- books %>%
+  filter(authors == "Douglas Adams") %>%
+  mutate(date = mdy(publication_date))
+
+d_adams %>%
+  arrange(date)
+## date is a character vector not dates
+
+d_adams %>%
+  ggplot() +
+  aes(x = date, y = average_rating) +
+  geom_line(col = "red") +
+  geom_point(col = "red") +
+  labs(
+    x = "Publication Date",
+    y = "Average Rating",
+    title = "Douglas Adams Books",
+    subtitle = "Publication Dates and Average Ratings"
+  )
+
+
+```
+
+
+```{r}
+books_by_year<- books %>%
+  mutate(year = format(as.Date(books$publication_date, format="%m/%d/%Y"),"%Y"), .after = publication_date) %>%
+group_by(year) %>%   # here we can see that these books were published between 1900 and 2020
+  group_by(authors)
+  #summarise(Number_of_book_per_year = n())
+  ggplot(books_by_year, aes(x = year, y = authors)) + geom_point()
+labs( title = "books published between 1900 and 2020")
+```
+
+```{r}
+books_by_year<- books %>%
+  mutate(
+    year = year(as.Date(publication_date, format="%m/%d/%Y")), .after = publication_date)
+
+ggplot(books_by_year) +
+  aes(x = year) +
+  geom_histogram(colour = "white") +
+  labs(
+    x = "",
+    y = "Number of Books",
+    title = "Number of Books per year",
+    subtitle = "in GoodReads Data"
+  )
+
+```
+
+
+
+
 
